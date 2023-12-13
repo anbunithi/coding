@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<h1 style="padding:15px 0 0 15px;">User Management</h1>
+<hr>
+<div class="container">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+        <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <form [formGroup]="myForm" (ngSubmit)="save()">
+            Firstname<input type="text" id="firstName" formControlName="firstName">
+            Lastname<input type="text" id="lastName" formControlName="lastName">
+            Age<input type="number" id="age" formControlName="age">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" formControlName="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            <button style="margin:0px 10px;" type="submit">
+              <span *ngIf="!isSaving">Save</span>
+              <mat-spinner *ngIf="isSaving"></mat-spinner></button>
+            <button type="reset" [disabled]="isSaving">Cancel</button>
+          </form>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+</div>
